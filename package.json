@@ -1,0 +1,24 @@
+{
+  "name": "Authentications",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/MartinMichelle10/Authentications.git",
+  "author": "Martin Michelle <martinmichelleebad@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon src/index.ts",
+    "build": "tsc",
+    "start": "npm run build && node dist/index.js",
+    "migration:run": "db-migrate up",
+    "format": "prettier --write src/**/*.ts",
+    "test": "export NODE_ENV=test && db-migrate up --env test && tsc && jasmine-ts && db-migrate down",
+    "test:window": "set NODE_ENV=test && db-migrate up --env test && tsc && jasmine-ts && db-migrate down",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint --fix"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.4"
+  }
+}
