@@ -26,7 +26,14 @@ class UserService {
 
     const newUser = await userModel.create(newUserData)
 
-    return newUser
+    const userData = await userModel.findOne({
+      attributes: ['firstName', 'lastName', 'email', 'identifier'],
+      where: {
+        email: newUser.get('email'),
+      },
+    })
+
+    return userData
   }
 
   getMany = async () => {

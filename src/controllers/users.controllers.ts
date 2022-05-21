@@ -5,8 +5,6 @@ import db from '../database'
 import config from '../config'
 import UserService from '../service/user.service'
 
-const userModel = db.User
-
 export const create = async (
   req: Request,
   res: Response,

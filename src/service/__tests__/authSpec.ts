@@ -1,6 +1,4 @@
-import UserModel from '../../models/user.model'
 import { UserAttributes } from '../../types/user.type'
-
 import UserService from '../user.service'
 
 describe('Authentication Module', () => {
