@@ -9,10 +9,9 @@
     "dev": "nodemon src/index.ts",
     "build": "tsc",
     "start": "npm run build && node dist/index.js",
-    "migration:run": "db-migrate up",
     "format": "prettier --write src/**/*.ts",
     "test": "tsc && jasmine-ts ",
-    "test:window": "set NODE_ENV=test && db-migrate up --env test && tsc && jasmine-ts && db-migrate down",
+    "test:window": "set NODE_ENV=test --env test && tsc && jasmine-ts ",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint --fix"
   },

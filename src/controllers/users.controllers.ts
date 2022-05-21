@@ -3,14 +3,9 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import db from '../database'
 import config from '../config'
-import { UserAttributes } from '../types/user.type'
+import UserService from '../service/user.service'
 
 const userModel = db.User
-
-const hashPassword = (password: string) => {
-  const salt = parseInt(config.salt as string, 10)
-  return bcrypt.hashSync(`${password}${config.pepper}`, salt)
-}
 
 export const create = async (
   req: Request,
@@ -18,17 +13,8 @@ export const create = async (
   next: NextFunction
 ) => {
   try {
-    const { firstName, lastName, email, password } = req.body
+    const user = await UserService.create(req.body)
 
-    const newUser: UserAttributes = {
-      firstName,
-      lastName,
-      email,
-      password: hashPassword(password as string),
-      refreshToken: db.sequelize.fn('UUID'),
-    }
-
-    const user = await userModel.create(newUser)
     res.json({
       status: 'success',
       data: user,
@@ -45,10 +31,8 @@ export const getMany = async (
   next: NextFunction
 ) => {
   try {
-    console.log('Here')
-    const users = await userModel.findAll({
-      attributes: ['firstName', 'lastName', 'email', 'identifier'],
-    })
+    const users = await UserService.getMany()
+
     res.json({
       status: 'success',
       data: users,
@@ -66,10 +50,7 @@ export const getOne = async (
 ) => {
   try {
     // req.params.id as unknown as string
-    const user = await userModel.findOne({
-      attributes: ['firstName', 'lastName', 'email', 'identifier'],
-      where: { identifier: req.params.id },
-    })
+    const user = await UserService.getOne(req.params.id)
 
     if (!user) {
       return res.status(401).json({
@@ -94,63 +75,20 @@ export const authenticate = async (
   next: NextFunction
 ) => {
   try {
-    const { email, password } = req.body
-
-    const user = await userModel.findOne({
-      attributes: ['firstName', 'lastName', 'email', 'identifier', 'password'],
-      where: {
-        email,
-      },
-    })
-
-    const hashPassword = user.get('password')
-
-    const isPasswordValid = bcrypt.compareSync(
-      `${password}${config.pepper}`,
-      hashPassword
-    )
+    const user = await UserService.authenticate(req.body)
 
     const token = jwt.sign({ user }, config.tokenSecret as unknown as string)
 
-    if (!isPasswordValid) {
+    if (!user) {
       return res.status(401).json({
         status: 'error',
         message: 'the username and password do not match please try again',
       })
     }
-
-    const updateUser = await userModel.update(
-      {
-        refreshToken: db.sequelize.fn('UUID'),
-      },
-      {
-        where: { email },
-      }
-    )
-
-    if (!updateUser) {
-      return res.status(401).json({
-        status: 'error',
-        message: 'the username and password do not match please try again',
-      })
-    }
-
-    const userDta = await userModel.findOne({
-      attributes: [
-        'firstName',
-        'lastName',
-        'email',
-        'identifier',
-        'refreshToken',
-      ],
-      where: {
-        email,
-      },
-    })
 
     return res.json({
       status: 'success',
-      data: { user: userDta, token },
+      data: { user: user, token },
       message: 'user authenticated successfully',
     })
   } catch (err) {
@@ -164,14 +102,7 @@ export const refreshTokenOfUser = async (
   next: NextFunction
 ) => {
   try {
-    const { refreshToken } = req.body
-
-    const user = await userModel.findOne({
-      attributes: ['firstName', 'lastName', 'email', 'identifier', 'password'],
-      where: {
-        refreshToken,
-      },
-    })
+    const user = await UserService.refreshTokenOfUser(req.body)
 
     if (!user) {
       return res.status(401).json({
@@ -183,39 +114,9 @@ export const refreshTokenOfUser = async (
 
     const token = jwt.sign({ user }, config.tokenSecret as unknown as string)
 
-    const updateUser = await userModel.update(
-      {
-        refreshToken: db.sequelize.fn('UUID'),
-      },
-      {
-        where: { refreshToken },
-      }
-    )
-
-    if (!updateUser) {
-      return res.status(401).json({
-        status: 'error',
-        // eslint-disable-next-line quotes
-        message: "Can't refresh token of user please try again",
-      })
-    }
-
-    const userDta = await userModel.findOne({
-      attributes: [
-        'firstName',
-        'lastName',
-        'email',
-        'identifier',
-        'refreshToken',
-      ],
-      where: {
-        identifier: user.get('identifier'),
-      },
-    })
-
     return res.json({
       status: 'success',
-      data: { user: userDta, token },
+      data: { user, token },
       message: 'user authenticated successfully',
     })
   } catch (err) {
