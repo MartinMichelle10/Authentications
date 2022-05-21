@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express'
+import { Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import Error from '../interfaces/error.interface'
 import config from '../config'
@@ -10,7 +10,7 @@ const handleUnauthorizedError = (next: NextFunction) => {
 }
 
 const validateTokenMiddleware = (
-  req: Request,
+  req: any,
   _res: Response,
   next: NextFunction
 ) => {
@@ -24,7 +24,10 @@ const validateTokenMiddleware = (
           token,
           config.tokenSecret as unknown as string
         )
+
         if (decode) {
+          const { user }: any = decode
+          req.user = user
           next()
         } else {
           // Failed to authenticate user.

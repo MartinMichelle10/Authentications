@@ -24,7 +24,7 @@ export const create = async (
 }
 
 export const getMany = async (
-  _: Request,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {

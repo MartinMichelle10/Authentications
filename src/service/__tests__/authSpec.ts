@@ -14,6 +14,7 @@ describe('Authentication Module', () => {
       firstName: 'Test',
       lastName: 'User',
       password: 'test123',
+      roleId: 'iiiiiiiiiiiiiiiii',
     } as UserAttributes
 
     beforeAll(async () => {

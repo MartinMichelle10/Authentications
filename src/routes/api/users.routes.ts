@@ -1,12 +1,25 @@
 import { Router } from 'express'
 import * as controllers from '../../controllers/users.controllers'
 import authenticationMiddleware from '../../middleware/authentication.middleware'
+import checkPermission from '../../middleware/permission.middleware'
 
 const routes = Router()
 // api/users
 routes.route('/').post(controllers.create)
-routes.route('/').get(authenticationMiddleware, controllers.getMany)
-routes.route('/:id').get(authenticationMiddleware, controllers.getOne)
+routes
+  .route('/')
+  .get(
+    authenticationMiddleware,
+    checkPermission('list_users'),
+    controllers.getMany
+  )
+routes
+  .route('/:id')
+  .get(
+    authenticationMiddleware,
+    checkPermission('get_user'),
+    controllers.getOne
+  )
 // authentication
 routes.route('/authenticate').post(controllers.authenticate)
 // refresh token

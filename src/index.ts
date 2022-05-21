@@ -24,7 +24,6 @@ app.use(
     max: 100, // Limit each IP to 100 requests per `window` (here, per 1 minutes)
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-    message: 'el3b b3ed ya ro7 mama',
   })
 )
 
@@ -42,8 +41,7 @@ app.use(errorMiddleware)
 
 app.use((_: Request, res: Response) => {
   res.status(404).json({
-    message:
-      'Ohh you are lost, read the API documentation to find your way back home 😂',
+    message: 'Ohh you are lost, read the API documentation',
   })
 })
 

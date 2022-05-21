@@ -1,6 +1,4 @@
-import { Request, Response, NextFunction } from 'express'
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
 import db from '../database'
 import config from '../config'
 import { UserAttributes } from '../types/user.type'
@@ -14,12 +12,13 @@ const hashPassword = (password: string) => {
 
 class UserService {
   create = async (user: UserAttributes) => {
-    const { firstName, lastName, email, password } = user
+    const { firstName, lastName, email, password, roleId } = user
 
     const newUserData: UserAttributes = {
       firstName,
       lastName,
       email,
+      roleId,
       password: hashPassword(password as string),
       refreshToken: db.sequelize.fn('UUID'),
     }
@@ -27,7 +26,7 @@ class UserService {
     const newUser = await userModel.create(newUserData)
 
     const userData = await userModel.findOne({
-      attributes: ['firstName', 'lastName', 'email', 'identifier'],
+      attributes: ['firstName', 'lastName', 'email', 'identifier', 'roleId'],
       where: {
         email: newUser.get('email'),
       },
@@ -38,7 +37,7 @@ class UserService {
 
   getMany = async () => {
     const users = await userModel.findAll({
-      attributes: ['firstName', 'lastName', 'email', 'identifier'],
+      attributes: ['firstName', 'lastName', 'email', 'identifier', 'roleId'],
     })
 
     return users
@@ -47,7 +46,7 @@ class UserService {
   getOne = async (id: string) => {
     // req.params.id as unknown as string
     const user = await userModel.findOne({
-      attributes: ['firstName', 'lastName', 'email', 'identifier'],
+      attributes: ['firstName', 'lastName', 'email', 'identifier', 'roleId'],
       where: { identifier: id },
     })
 
@@ -99,6 +98,7 @@ class UserService {
         'email',
         'identifier',
         'refreshToken',
+        'roleId',
       ],
       where: {
         email,
@@ -142,6 +142,7 @@ class UserService {
         'email',
         'identifier',
         'refreshToken',
+        'roleId',
       ],
       where: {
         identifier: user.get('identifier'),

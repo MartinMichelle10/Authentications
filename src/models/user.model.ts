@@ -14,6 +14,14 @@ export = (sequelize: any, DataTypes: any) => {
     email!: string
     password!: string
     refreshToken!: string
+    roleId!: string
+
+    static associate(models: any) {
+      User.belongsTo(models.Roles, {
+        foreignKey: 'roleId',
+        as: 'roles',
+      })
+    }
   }
 
   User.init(
@@ -43,6 +51,10 @@ export = (sequelize: any, DataTypes: any) => {
       },
       refreshToken: {
         type: DataTypes.STRING,
+        allowNull: false,
+      },
+      roleId: {
+        type: DataTypes.UUID,
         allowNull: false,
       },
     },

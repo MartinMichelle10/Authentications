@@ -12,6 +12,7 @@ describe('User API Endpoints', () => {
     firstName: 'Test',
     lastName: 'User',
     password: 'test123',
+    roleId: 'iiiiiiiiiiiii',
   } as UserAttributes
 
   beforeAll(async () => {
@@ -61,6 +62,7 @@ describe('User API Endpoints', () => {
           firstName: 'Test2',
           lastName: 'User2',
           password: 'test123',
+          roleId: 'iiiiiiiiiiiii',
         } as UserAttributes)
       expect(res.status).toBe(200)
       const { email, firstName, lastName, identifier } = res.body.data
