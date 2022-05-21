@@ -4,6 +4,7 @@ import config from '../config'
 import { UserAttributes } from '../types/user.type'
 
 const userModel = db.User
+const rolesModel = db.Roles
 
 const hashPassword = (password: string) => {
   const salt = parseInt(config.salt as string, 10)
@@ -160,6 +161,17 @@ class UserService {
     })
 
     return deletedUser
+  }
+
+  getRole = async (id: string) => {
+    const roleData = await rolesModel.findOne({
+      attributes: ['name'],
+      where: {
+        identifier: id,
+      },
+    })
+
+    return roleData
   }
 }
 

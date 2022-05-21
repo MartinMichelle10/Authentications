@@ -27,4 +27,12 @@ routes
   .route('/refresh-token')
   .post(authenticationMiddleware, controllers.refreshTokenOfUser)
 
+routes
+  .route('/:id')
+  .delete(
+    authenticationMiddleware,
+    checkPermission('delete_user'),
+    controllers.deleteOne
+  )
+
 export default routes

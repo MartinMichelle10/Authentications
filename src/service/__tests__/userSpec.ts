@@ -30,7 +30,7 @@ describe('User Model', () => {
       firstName: 'Test',
       lastName: 'User',
       password: 'test123',
-      roleId: 'iiiiiiiiiiiiiiiii',
+      roleId: '4e9851c9-d929-11ec-9a79-5a0fd4bb0069',
     } as UserAttributes
 
     beforeAll(async () => {
@@ -46,7 +46,7 @@ describe('User Model', () => {
         firstName: 'Test',
         lastName: 'User',
         password: 'test123',
-        roleId: 'iiiiiiiiiiiiiiiii',
+        roleId: '4e9851c9-d929-11ec-9a79-5a0fd4bb0069',
       } as UserAttributes)
 
       expect(createdUser.dataValues).toEqual({
@@ -54,7 +54,7 @@ describe('User Model', () => {
         email: 'test2c@test.com',
         firstName: 'Test',
         lastName: 'User',
-        roleId: 'iiiiiiiiiiiiiiiii',
+        roleId: '4e9851c9-d929-11ec-9a79-5a0fd4bb0069',
       })
 
       await UserService.deleteOne(createdUser.get('identifier') as string)

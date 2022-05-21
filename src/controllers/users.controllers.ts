@@ -121,3 +121,39 @@ export const refreshTokenOfUser = async (
     return next(err)
   }
 }
+
+export const deleteOne = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = await UserService.getOne(req.params.id)
+
+    if (!user) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'the user id do not match please try again',
+      })
+    }
+
+    const role = await UserService.getRole(user.get('roleId'))
+
+    if (role.get('name') === 'Administrator') {
+      return res.status(401).json({
+        status: 'error',
+        message: 'delete administrator is not allowed',
+      })
+    }
+
+    const deletedUser = await UserService.deleteOne(req.params.id)
+
+    res.json({
+      status: 'success',
+      data: deletedUser,
+      message: 'User deleted successfully',
+    })
+  } catch (err) {
+    next(err)
+  }
+}

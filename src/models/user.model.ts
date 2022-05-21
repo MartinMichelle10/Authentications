@@ -60,6 +60,7 @@ export = (sequelize: any, DataTypes: any) => {
     },
     {
       sequelize,
+      paranoid: true,
       modelName: 'User',
     }
   )
