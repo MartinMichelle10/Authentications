@@ -36,7 +36,7 @@ $ yarn dev
 
 ```bash
 # development
-$ yarn rest
+$ yarn test
 ```
 
 ## Swagger API docs 
