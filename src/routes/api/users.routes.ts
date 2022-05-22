@@ -30,6 +30,14 @@ routes
 routes.route('/log-out').put(authenticationMiddleware, controllers.logOut)
 
 routes
+  .route('/destroy-session')
+  .put(
+    authenticationMiddleware,
+    checkPermission('destroy-sessions'),
+    controllers.destroyAllSessions
+  )
+
+routes
   .route('/:id')
   .delete(
     authenticationMiddleware,

@@ -192,3 +192,21 @@ export const logOut = async (
     next(err)
   }
 }
+
+export const destroyAllSessions = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    await Redis.flush()
+
+    res.json({
+      status: 'success',
+      data: null,
+      message: 'All Sessions destroyed',
+    })
+  } catch (err) {
+    next(err)
+  }
+}
