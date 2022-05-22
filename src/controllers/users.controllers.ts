@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
-import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import db from '../database'
 import config from '../config'
 import UserService from '../service/user.service'
+import Redis from '../helpers/redis'
 
 export const create = async (
   req: Request,
@@ -75,14 +74,22 @@ export const authenticate = async (
   try {
     const user = await UserService.authenticate(req.body)
 
-    const token = jwt.sign({ user }, config.tokenSecret as unknown as string)
-
     if (!user) {
       return res.status(401).json({
         status: 'error',
         message: 'the username and password do not match please try again',
       })
     }
+
+    const token = jwt.sign({ user }, config.tokenSecret as unknown as string, {
+      expiresIn: `${(config.tokenExpiresIn as unknown as number) * 60000}ms`,
+    })
+
+    await Redis.set(
+      token,
+      token,
+      (config.tokenExpiresIn as unknown as number) * 60
+    )
 
     return res.json({
       status: 'success',
@@ -110,7 +117,15 @@ export const refreshTokenOfUser = async (
       })
     }
 
-    const token = jwt.sign({ user }, config.tokenSecret as unknown as string)
+    const token = jwt.sign({ user }, config.tokenSecret as unknown as string, {
+      expiresIn: `${(config.tokenExpiresIn as unknown as number) * 60000}ms`,
+    })
+
+    await Redis.set(
+      token,
+      token,
+      (config.tokenExpiresIn as unknown as number) * 60
+    )
 
     return res.json({
       status: 'success',
@@ -152,6 +167,26 @@ export const deleteOne = async (
       status: 'success',
       data: deletedUser,
       message: 'User deleted successfully',
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const logOut = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const token = req.get('Authorization')?.split(' ')[1]
+
+    await Redis.del(token)
+
+    res.json({
+      status: 'success',
+      data: null,
+      message: 'Log out successfully',
     })
   } catch (err) {
     next(err)

@@ -23,13 +23,13 @@ db.Roles = Roles(sequelize, DataTypes)
 db.Permission = Permission(sequelize, DataTypes)
 db.RolePermission = RolePermission(sequelize, DataTypes)
 
-// if (db.User.associate) {
-//   db.User.associate(db)
-// }
+if (db.User.associate) {
+  db.User.associate(db)
+}
 
-// if (db.RolePermission.associate) {
-//   db.RolePermission.associate(db)
-// }
+if (db.RolePermission.associate) {
+  db.RolePermission.associate(db)
+}
 
 db.sequelize = sequelize
 db.Sequelize = Sequelize

@@ -14,6 +14,9 @@ const {
   BCRYPT_PASSWORD,
   SALT_ROUNDS,
   TOKEN_SECRET,
+  JWT_ACCESS_EXPIRATION_MINUTES,
+  REDIS_HOST,
+  REDIS_PORT,
 } = process.env
 
 export default {
@@ -26,4 +29,7 @@ export default {
   pepper: BCRYPT_PASSWORD,
   salt: SALT_ROUNDS,
   tokenSecret: TOKEN_SECRET,
+  tokenExpiresIn: JWT_ACCESS_EXPIRATION_MINUTES,
+  redisPort: REDIS_PORT,
+  redisHost: REDIS_HOST,
 }

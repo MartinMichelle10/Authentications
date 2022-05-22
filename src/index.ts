@@ -6,6 +6,7 @@ import errorMiddleware from './middleware/error.middleware'
 import config from './config'
 import routes from './routes'
 import db from './database'
+import Redis from './helpers/redis'
 
 const PORT = config.port || 3000
 // create an instance server
@@ -49,7 +50,11 @@ app.use((_: Request, res: Response) => {
 
 db.sequelize.sync().then(() => {
   app.listen(PORT, () => {
-    console.log(`Server is starting at prot:${PORT}`)
+    Redis.connect((connected: any) => {
+      if (connected) {
+        console.log(`Server is starting at prot:${PORT}`)
+      }
+    })
   })
 })
 

@@ -2,6 +2,7 @@ import { Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import Error from '../interfaces/error.interface'
 import config from '../config'
+import Redis from '../helpers/redis'
 
 const handleUnauthorizedError = (next: NextFunction) => {
   const error: Error = new Error('Unauthorized, Please login again')
@@ -26,9 +27,15 @@ const validateTokenMiddleware = (
         )
 
         if (decode) {
-          const { user }: any = decode
-          req.user = user
-          next()
+          Redis.getKeyData(token, (data: any) => {
+            if (data) {
+              const { user }: any = decode
+              req.user = user
+              next()
+            } else {
+              handleUnauthorizedError(next)
+            }
+          })
         } else {
           // Failed to authenticate user.
           handleUnauthorizedError(next)

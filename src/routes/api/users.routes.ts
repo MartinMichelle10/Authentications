@@ -27,6 +27,8 @@ routes
   .route('/refresh-token')
   .post(authenticationMiddleware, controllers.refreshTokenOfUser)
 
+routes.route('/log-out').put(authenticationMiddleware, controllers.logOut)
+
 routes
   .route('/:id')
   .delete(

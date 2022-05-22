@@ -6,11 +6,6 @@ export = (sequelize: any, DataTypes: any) => {
     extends Model<RolePermissionAttributes>
     implements RolePermissionAttributes
   {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     identifier!: string
     roleId!: string
     permId!: string
