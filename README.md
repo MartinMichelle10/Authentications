@@ -19,7 +19,7 @@ $ yarn
    and validate it using middleware
 
    ### For Linux installation
-    follow this -> <a href="https://redis.io/docs/getting-started/installation/install-redis-on-linux/">linux redis<a>
+    https://redis.io/docs/getting-started/installation/install-redis-on-linux/
 ## Running the app
 
 ```bash
