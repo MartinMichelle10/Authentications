@@ -40,6 +40,24 @@ export const getMany = async (
   }
 }
 
+export const getAllRoles = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const roles = await UserService.getAllRoles()
+
+    res.json({
+      status: 'success',
+      data: roles,
+      message: 'Roles retrieved successfully',
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+
 export const getOne = async (
   req: Request,
   res: Response,
@@ -102,12 +120,12 @@ export const authenticate = async (
 }
 
 export const refreshTokenOfUser = async (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const user = await UserService.refreshTokenOfUser(req.body)
+    const user = await UserService.refreshTokenOfUser(req.user)
 
     if (!user) {
       return res.status(401).json({

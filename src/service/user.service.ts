@@ -173,6 +173,12 @@ class UserService {
 
     return roleData
   }
+
+  getAllRoles = async () => {
+    const roleData = await rolesModel.findAll()
+
+    return roleData
+  }
 }
 
 export default new UserService()

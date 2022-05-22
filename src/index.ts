@@ -2,6 +2,8 @@ import express, { Application, Request, Response } from 'express'
 import morgan from 'morgan'
 import helmet from 'helmet'
 import rateLimit from 'express-rate-limit'
+import swaggerJsDoc from 'swagger-jsdoc'
+import swaggerUi from 'swagger-ui-express'
 import errorMiddleware from './middleware/error.middleware'
 import config from './config'
 import routes from './routes'
@@ -27,6 +29,42 @@ app.use(
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
   })
 )
+
+// Extended: https://swagger.io/specification/#infoObject
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: '3.0.1',
+    info: {
+      version: '1.0.0',
+      title: 'Authentication and Authorization API',
+      description: 'Authentication and Authorization API',
+      contact: {
+        name: 'Martin Michelle',
+      },
+      servers: ['http://localhost:3000'],
+    },
+    basePath: '/',
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+  },
+  apis: ['**/*.ts'],
+}
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions)
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
 app.use('/api', routes)
 
