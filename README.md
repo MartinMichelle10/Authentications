@@ -12,6 +12,8 @@ or
 ```bash
 $ yarn
 ```
+## ERD db diagram
+![Alt text](./db.digram.PNG?raw=true "Title")
 
 ## Installing Redis 
    We need to install redis to handle log out functions
@@ -20,6 +22,8 @@ $ yarn
 
    ### For Linux installation
     https://redis.io/docs/getting-started/installation/install-redis-on-linux/
+   ### For Windows installation
+    https://github.com/tporadowski/redis/releases
 ## Running the app
 
 ```bash
